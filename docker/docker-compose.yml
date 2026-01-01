@@ -1,0 +1,32 @@
+name: go-boilerplate-rest-api-chi
+services:
+  db:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    env_file:
+      - ../.env
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - db_volume:/var/lib/mysql
+
+  api:
+    container_name: go-boilerplate-rest-api-chi
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_volume:

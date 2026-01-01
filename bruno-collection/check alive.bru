@@ -1,0 +1,22 @@
+meta {
+  name: check alive
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{HOST}}/alive
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,9 @@
+.DS_STORE
+.idea
+tmp
+coverage.*
+.env
+/build
+
+docs/swagger.yaml
+docs/swagger.json

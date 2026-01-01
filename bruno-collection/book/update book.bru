@@ -1,0 +1,26 @@
+meta {
+  name: update book
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{HOST}}/api/books/:book_id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  book_id: my-id
+}
+
+body:json {
+  {
+    "description": ""
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
