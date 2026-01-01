@@ -1,0 +1,26 @@
+meta {
+  name: get author by id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{HOST}}/api/authors/:author_id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  author_id: my-id
+}
+
+body:json {
+  {
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

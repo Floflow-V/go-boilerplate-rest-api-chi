@@ -1,0 +1,26 @@
+meta {
+  name: get book by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{HOST}}/api/books/:book_id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  book_id: my-id
+}
+
+body:json {
+  {
+    
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

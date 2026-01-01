@@ -1,0 +1,32 @@
+version: "2"
+
+run:
+  timeout: 10m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - ineffassign
+    - gosec
+    - bodyclose
+    - sqlclosecheck
+    - errorlint
+    - nilerr
+    - prealloc
+
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - gosec
+          - errcheck
+      - path: mocks/
+        linters:
+          - unused
+
+issues:
+  max-same-issues: 3
