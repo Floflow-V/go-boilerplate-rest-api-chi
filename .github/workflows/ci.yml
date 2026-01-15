@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  quality-and-security:
+    name: Quality & Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+
+      - name: Run Govulncheck
+        uses: golang/govulncheck-action@v1
+
+      - name: Run Tests
+        run: |
+          go test -coverprofile coverage.out $(go list ./... | grep -v '/docs' | grep -v '/mocks' | grep -v '/entity') 
+          go tool cover -func=coverage.out
+
+      - name: Generate GitHub Summary
+        run: |
+          echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          PERCENTAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}')
+          echo "Total Coverage: **$PERCENTAGE**" >> $GITHUB_STEP_SUMMARY
+
+  build-docker:
+    name: Docker Build
+    needs: quality-and-security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -f docker/Dockerfile -t docker/boilerplate-api:test .

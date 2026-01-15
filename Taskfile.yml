@@ -1,0 +1,61 @@
+version: "3"
+
+vars:
+  DOCKER_COMPOSE_FILE_PATH: "./docker/docker-compose.yml"
+
+tasks:
+  dev:
+    desc: run the api localy with docker compose
+    cmd: docker compose -f {{ .DOCKER_COMPOSE_FILE_PATH }} up --build
+    silent: true
+
+  format:
+    desc: format the Go code
+    cmd: go fmt ./...
+    silent: true
+
+  build:
+    desc: create static executable of the api
+    cmd: CGO_ENABLED=0 go build -o ./build ./...
+    silent: true
+
+  lint:
+    desc: lint the Go code
+    cmd: golangci-lint run ./...
+    silent: true
+
+  doc:
+    desc: generate the swagger documention
+    cmds:
+      - swag fmt ./...
+      - swag init --generalInfo cmd/go-boilerplate-rest-api-chi/main.go --parseDependency --parseInternal
+    silent: true
+
+  doc-fmt:
+    desc: format the swaggo comments
+    cmd: swag fmt ./...
+    silent: true
+
+  generate:
+    desc: generate mocks for tests
+    cmd: go generate ./...
+    silent: true
+
+  test:
+    desc: run all tests
+    cmd: go test ./...
+    silent: true
+
+  test-cover:
+    desc: run all tests with coverage
+    cmds:
+    - go test -coverprofile coverage.txt $(go list ./... | grep -v '/docs' | grep -v '/mocks' | grep -v '/entity')
+    - go tool cover -func=coverage.txt
+    silent: true
+
+  test-cover-details:
+    desc: run all tests with coverage and show details
+    cmds:
+    - go test -coverprofile coverage.txt $(go list ./... | grep -v '/docs' | grep -v '/mocks' | grep -v '/entity')
+    - go tool cover -html=coverage.txt
+    silent: true

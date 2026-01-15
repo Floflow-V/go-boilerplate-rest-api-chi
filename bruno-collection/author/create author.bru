@@ -1,0 +1,22 @@
+meta {
+  name: create author
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{HOST}}/api/authors
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "name"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
